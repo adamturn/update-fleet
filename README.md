@@ -8,9 +8,11 @@ $ cd ~/github
 $ git clone https://github.com/adamturn/update-fleet.git && cd update-fleet
 ```
 
-Next, define the target fleet with an /update-fleet/fleet.json file. Assign a list of IPv4 addresses to each username key:
+Next, create a /config directory and add a fleet.json file that contains a list of IPv4 addresses for each username key.
 ```shell
-$ touch fleet.json
+$ mkdir config
+$ cp config-templates/template-fleet.json config/fleet.json
+$ vi config/fleet.json
 ```
 ```json
 {
@@ -19,28 +21,59 @@ $ touch fleet.json
 }
 ```
 
-Then create an /update-fleet/.ssh directory and add a fleet-config-dev.pem file that contains RSA private keys for each server in the target fleet. 
+Then create an .ssh directory and add a fleet.pem file that contains RSA private keys for each server in the target fleet.
 ```shell
 $ mkdir .ssh
-$ cat ~/.ssh/example-server-one.pem >> fleet-config-dev.pem
-$ cat ~/.ssh/example-server-two.pem >> fleet-config-dev.pem
+$ cat ~/.ssh/example-server-one.pem >> fleet.pem
+$ cat ~/.ssh/example-server-two.pem >> fleet.pem
 ```
 
-Project structure should now look like this:
+Next, choose a target file for scp from /config-templates and copy it into /config. Then edit it accordingly.
+```shell
+$ cp config-templates/template-config-dev.properties config/config-dev.properties
+$ vi config/config-dev.properties
+```
+
+Project structure should now resemble something like this:
 ```
 /update-fleet
     /.ssh
-        fleet-config-dev.pem
+        fleet.pem
+    /config
+        config-dev.properties
+        fleet.json
+    /config-templates
+        template-config-dev.properties
+        template-fleet.json
     /src
+        config-dev.py
         main.py
-    /utils
-        template-dev.properties
     .gitignore
-    fleet.json
     README.md
 ```
 
-Finally, deploy an updated ~/utils/config-dev.properties file to each server in the fleet by running the main module and passing the latest IPv4 address.
+Finally, deploy a config file to a fleet of servers by running the main module and passing the relative path to each corresponding option.
 ```shell
-$ python src/main.py 192.0.0.1
+$ python src/main.py id=.ssh/fleet.pem fleet=config/fleet.json file=config/config-dev.properties target=~/utils/config-dev.properties
+```
+
+Alternatively, save this configuration information in its own module similar to config-dev.py:
+```python
+from main import main
+
+
+def config_dev():
+    file_name = "config-dev.properties"
+    app_cfg = {
+        "fleet": "config/fleet.json",
+        "id": ".ssh/fleet.pem",
+        "file": f"config/{file_name}",
+        "target": f"~/utils/{file_name}"
+    }
+
+    return app_cfg
+
+
+if __name__ == "__main__":
+    main(config_dev())
 ```
