@@ -57,7 +57,7 @@ Finally, deploy a config file to a fleet of servers by running the main.py modul
 $ python src/main.py id=.ssh/fleet.pem fleet=config/fleet.json file=config/config-dev.properties target=~/utils/config-dev.properties
 ```
 
-Alternatively, save this configuration information in its own module to run independently like config-dev.py:
+Alternatively, save this configuration information in its own module to run independently like config_dev.py:
 ```python
 from main import main
 
