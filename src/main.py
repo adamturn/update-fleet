@@ -41,8 +41,8 @@ def main(app_cfg: dict):
 
 if __name__ == "__main__":
     APP_CFG = {"keys": None, "fleet": None, "file": None, "target": None}
-    for CMD_ARG in sys.argv:
+    for cmd_arg in sys.argv:
         for option in APP_CFG:
-            if CMD_ARG.startswith(option):
-                APP_CFG[option] = CMD_ARG.split("=")[1].strip()
+            if cmd_arg.startswith(option):
+                APP_CFG[option] = cmd_arg.split("=")[1].strip()
     main(APP_CFG)
