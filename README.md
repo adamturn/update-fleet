@@ -24,8 +24,8 @@ $ vi config/fleet.json
 Then create an .ssh directory and add a fleet.pem file that contains RSA private keys for each server in the target fleet.
 ```shell
 $ mkdir .ssh
-$ cat ~/.ssh/example-server-one.pem >> fleet.pem
-$ cat ~/.ssh/example-server-two.pem >> fleet.pem
+$ cat ~/.ssh/example-server-one.pem >> .ssh/fleet.pem
+$ cat ~/.ssh/example-server-two.pem >> .ssh/fleet.pem
 ```
 
 Next: choose a target file for scp, copy it into /config, and edit it accordingly.
@@ -52,7 +52,7 @@ Project structure should now resemble something like this:
     README.md
 ```
 
-Finally, deploy a config file to a fleet of servers by running the main.py module and passing a relative path to each corresponding option.
+Finally, deploy a file to a fleet of servers by running the main.py module and passing a path to each corresponding option.
 ```shell
 $ python src/main.py id=.ssh/fleet.pem fleet=config/fleet.json file=config/config-dev.properties target=~/utils/config-dev.properties
 ```
