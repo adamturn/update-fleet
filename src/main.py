@@ -5,9 +5,7 @@ Author: Adam Turner <turner.adch@gmail.com>
 
 # standard library
 import json
-import os
 import pathlib
-import re
 import subprocess
 import sys
 import time

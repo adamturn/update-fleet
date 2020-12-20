@@ -1,5 +1,5 @@
-# Update config-dev.properties files
-Update configuration files across a fleet of servers using the secure copy protocol.
+# Update Fleet
+Update configuration files across a fleet of servers using Python and the secure copy protocol.
 
 ## Quickstart
 Start by cloning the repo and changing your current directory to the project root.
@@ -28,7 +28,7 @@ $ cat ~/.ssh/example-server-one.pem >> fleet.pem
 $ cat ~/.ssh/example-server-two.pem >> fleet.pem
 ```
 
-Next, choose a target file for scp from /config-templates and copy it into /config. Then edit it accordingly.
+Next: choose a target file for scp, copy it into /config, and edit it accordingly.
 ```shell
 $ cp config-templates/template-config-dev.properties config/config-dev.properties
 $ vi config/config-dev.properties
@@ -52,12 +52,12 @@ Project structure should now resemble something like this:
     README.md
 ```
 
-Finally, deploy a config file to a fleet of servers by running the main module and passing the relative path to each corresponding option.
+Finally, deploy a config file to a fleet of servers by running the main.py module and passing a relative path to each corresponding option.
 ```shell
 $ python src/main.py id=.ssh/fleet.pem fleet=config/fleet.json file=config/config-dev.properties target=~/utils/config-dev.properties
 ```
 
-Alternatively, save this configuration information in its own module similar to config-dev.py:
+Alternatively, save this configuration information in its own module to run independently like config-dev.py:
 ```python
 from main import main
 
