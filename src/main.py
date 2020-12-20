@@ -15,8 +15,7 @@ def main(app_cfg: dict):
     start_time = time.time()
     src_dir = pathlib.Path(__file__).parent.absolute()
     if str(src_dir).endswith("src"):
-        # TODO: fleet-config-dev.pem is added manually
-        pem_path = src_dir.parent / app_cfg["id"]
+        pem_path = src_dir.parent / app_cfg["keys"]
         fleet_path = src_dir.parent / app_cfg["fleet"]
         file_path = src_dir.parent / app_cfg["file"]
         target_path = app_cfg["target"]
@@ -41,7 +40,7 @@ def main(app_cfg: dict):
 
 
 if __name__ == "__main__":
-    APP_CFG = {"fleet": None, "id": None, "file": None, "target": None}
+    APP_CFG = {"keys": None, "fleet": None, "file": None, "target": None}
     for CMD_ARG in sys.argv:
         for option in APP_CFG:
             if CMD_ARG.startswith(option):
