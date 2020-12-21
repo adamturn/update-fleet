@@ -50,8 +50,6 @@ Project structure should now resemble this:
 ```
 /update-fleet
     /fleet
-        /.ssh
-            id_rsa.pub
         fleet.json
     /scp-files
         config-dev.properties
