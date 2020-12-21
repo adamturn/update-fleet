@@ -6,6 +6,7 @@ Author: Adam Turner <turner.adch@gmail.com>
 # standard library
 import json
 import pathlib
+import os
 import subprocess
 import sys
 import time
@@ -15,12 +16,12 @@ def main(app_cfg: dict):
     start_time = time.time()
     src_dir = pathlib.Path(__file__).parent.absolute()
     if str(src_dir).endswith("src"):
-        pem_path = src_dir.parent / app_cfg["keys"]
-        fleet_path = src_dir.parent / app_cfg["fleet"]
-        file_path = src_dir.parent / app_cfg["file"]
-        target_path = app_cfg["target"]
+        fleet_path = src_dir.parent / "fleet/{}.json".format(app_cfg[APP_CFG_KEY_0])
+        pem_path = fleet_path.parent / ".ssh/{}.pem".format(app_cfg[APP_CFG_KEY_0])
+        remote_filepath = app_cfg[APP_CFG_KEY_1].strip()
+        local_filepath = src_dir.parent / "scp-files/{}".format(remote_filepath.split("/")[-1])
     else:
-        raise ValueError("Program running outside of /src directory!")
+        raise ValueError("Main module running outside of /src directory!")
 
     with open(fleet_path, "r") as f:
         fleet = json.load(f)
@@ -30,19 +31,20 @@ def main(app_cfg: dict):
         for ip_addr in fleet[user]:
             print(f"{user}@{ip_addr}")
             subprocess.run(
-                ["scp", "-i", str(pem_path), str(file_path), f"{user}@{ip_addr}:{target_path}"],
+                ["scp", "-i", str(pem_path), str(local_filepath), f"{user}@{ip_addr}:{remote_filepath}"],
                 check=True
             )
-            continue
     print(f"Update time: {time.time() - start_time} seconds")
 
     return None
 
 
 if __name__ == "__main__":
-    APP_CFG = {"keys": None, "fleet": None, "file": None, "target": None}
+    APP_CFG_KEY_0 = "fleet"
+    APP_CFG_KEY_1 = "scp"
+    APP_CFG = {APP_CFG_KEY_0: None, APP_CFG_KEY_1: None}
     for cmd_arg in sys.argv:
-        for option in APP_CFG:
-            if cmd_arg.startswith(option):
-                APP_CFG[option] = cmd_arg.split("=")[1].strip()
+        for key in APP_CFG:
+            if cmd_arg.startswith(key):
+                APP_CFG[key] = cmd_arg.split("=")[1].strip()
     main(APP_CFG)

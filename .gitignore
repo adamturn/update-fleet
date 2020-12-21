@@ -1,3 +1,2 @@
-__pycache__
-config/
-.ssh/
+fleet/
+scp-files/

@@ -1,18 +1,18 @@
 # Update Fleet
-Update configuration files across a fleet of servers using Python and the secure copy protocol.
+Update metadata files across a fleet of servers using Python and the secure copy protocol.
 
 ## Quickstart
-Start by cloning the repo and changing your current directory to the project root.
+Clone this repo and enter the project's root directory.
 ```shell
 $ cd ~/github
 $ git clone https://github.com/adamturn/update-fleet.git && cd update-fleet
 ```
 
-Next, create a /config directory and add a fleet.json file that contains a list of IPv4 addresses for each username key.
+Make a fleet/ directory and add a "\<fleet-name\>.json" file with str username keys mapped to a list of str IPv4 addresses.
 ```shell
-$ mkdir config
-$ cp config-templates/template-fleet.json config/fleet.json
-$ vi config/fleet.json
+$ mkdir fleet
+$ cp scp-templates/template-fleet.json scp-files/fleet.json
+$ vi scp-files/fleet.json
 ```
 ```json
 {
@@ -21,59 +21,45 @@ $ vi config/fleet.json
 }
 ```
 
-Then create an .ssh directory and add a fleet.pem file that contains RSA private keys for each server in the target fleet.
+Make a fleet/.ssh/ directory and add a "\<fleet-name\>.pem" file that contains private keys for each user@host combination in "\<fleet-name\>.json".
 ```shell
-$ mkdir .ssh
-$ cat ~/.ssh/example-server-one.pem >> .ssh/fleet.pem
-$ cat ~/.ssh/example-server-two.pem >> .ssh/fleet.pem
+$ mkdir fleet/.ssh
+$ cat ~/.ssh/example-server-one.pem >> fleet/.ssh/fleet.pem
+$ cat ~/.ssh/example-server-two.pem >> fleet/.ssh/fleet.pem
 ```
 
-Next: choose a target file for scp, copy it into /config, and edit it accordingly.
+Make an scp-files/ directory and add a file that you want to secure copy across the fleet.
 ```shell
-$ cp config-templates/template-config-dev.properties config/config-dev.properties
-$ vi config/config-dev.properties
+$ mkdir scp-files
+$ cp scp-templates/template-config-dev.properties scp-files/config-dev.properties
+$ vi scp-files/config-dev.properties
+```
+```properties
+env=DEV
+host=127.0.0.1
+user=username
+pass=password
 ```
 
-Project structure should now resemble something like this:
+Project structure should now resemble this:
 ```
 /update-fleet
-    /.ssh
-        fleet.pem
-    /config
-        config-dev.properties
+    /fleets
+        /.ssh
+            fleet.pem
         fleet.json
-    /config-templates
+    /scp-files
+        config-dev.properties
+    /scp-templates
         template-config-dev.properties
         template-fleet.json
     /src
-        config-dev.py
         main.py
     .gitignore
     README.md
 ```
 
-Finally, deploy a file to a fleet of servers by running the main.py module and passing a path to each corresponding option.
+Finally, scp a file across a fleet of servers by running the main.py module. The fleet option requires your \<fleet-name\> and the scp option requires a full remote path with the file name part matching one in your /scp-files directory.
 ```shell
-$ python src/main.py id=.ssh/fleet.pem fleet=config/fleet.json file=config/config-dev.properties target=~/utils/config-dev.properties
-```
-
-Alternatively, save this configuration information in its own module to run independently like config_dev.py:
-```python
-from main import main
-
-
-def config_dev():
-    file_name = "config-dev.properties"
-    app_cfg = {
-        "fleet": "config/fleet.json",
-        "id": ".ssh/fleet.pem",
-        "file": f"config/{file_name}",
-        "target": f"~/utils/{file_name}"
-    }
-
-    return app_cfg
-
-
-if __name__ == "__main__":
-    main(config_dev())
+$ python src/main.py fleet=fleet scp=~/utils/config-dev.properties
 ```
