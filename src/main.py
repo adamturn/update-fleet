@@ -17,9 +17,9 @@ def main(app_cfg: dict):
     src_dir = pathlib.Path(__file__).parent.absolute()
     if str(src_dir).endswith("src"):
         fleet_path = src_dir.parent / "fleet/{}.json".format(app_cfg[APP_CFG_KEY_0])
-        pem_path = fleet_path.parent / ".ssh/{}.pem".format(app_cfg[APP_CFG_KEY_0])
         remote_filepath = app_cfg[APP_CFG_KEY_1].strip()
         local_filepath = src_dir.parent / "scp-files/{}".format(remote_filepath.split("/")[-1])
+        # host_prvkey = "~/.ssh/id_rsa"
     else:
         raise ValueError("Main module running outside of src directory!")
 
@@ -31,7 +31,7 @@ def main(app_cfg: dict):
         for ip_addr in fleet[user]:
             print(f"{user}@{ip_addr}")
             subprocess.run(
-                ["scp", "-i", str(pem_path), str(local_filepath), f"{user}@{ip_addr}:{remote_filepath}"],
+                ["scp", "-v", str(local_filepath), f"{user}@{ip_addr}:{remote_filepath}"],
                 check=True
             )
     print(f"Update time: {time.time() - start_time} seconds")

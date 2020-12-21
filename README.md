@@ -1,6 +1,15 @@
 # Update Fleet
 Update metadata files across a fleet of servers using Python and the secure copy protocol.
 
+## Authorized Host
+For this to work properly, the host running this program must have its public SSH key in the authorized_hosts file on every server in the fleet.
+```shell
+$ scp -i ~/.ssh/aws/aws-private-key.pem ~/.ssh/rsa_id.pub cloud-user@54.0.0.1:~/.ssh/tmp-public-key.pub
+$ ssh -i ~/.ssh/aws/aws-private-key.pem cloud-user@54.0.0.1
+[cloud-user]$ cat ~/.ssh/tmp-public-key.pub >> ~/.ssh/authorized_hosts
+[cloud-user]$ rm ~/.ssh/tmp-public-key.pub && exit
+```
+
 ## Quickstart
 Clone this repo and enter the project root.
 ```shell
@@ -21,13 +30,6 @@ $ vi scp-files/fleet.json
 }
 ```
 
-Make a fleet/.ssh/ directory and add a "\<fleet-name\>.pem" file that contains private keys for each user@host combination in "\<fleet-name\>.json".
-```shell
-$ mkdir fleet/.ssh
-$ cat ~/.ssh/example-server-one.pem >> fleet/.ssh/fleet.pem
-$ cat ~/.ssh/example-server-two.pem >> fleet/.ssh/fleet.pem
-```
-
 Make an scp-files/ directory and add a file that you want to secure copy across the fleet.
 ```shell
 $ mkdir scp-files
@@ -46,7 +48,7 @@ Project structure should now resemble this:
 /update-fleet
     /fleet
         /.ssh
-            fleet.pem
+            id_rsa.pub
         fleet.json
     /scp-files
         config-dev.properties
