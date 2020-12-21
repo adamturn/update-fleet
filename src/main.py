@@ -21,7 +21,7 @@ def main(app_cfg: dict):
         remote_filepath = app_cfg[APP_CFG_KEY_1].strip()
         local_filepath = src_dir.parent / "scp-files/{}".format(remote_filepath.split("/")[-1])
     else:
-        raise ValueError("Main module running outside of /src directory!")
+        raise ValueError("Main module running outside of src directory!")
 
     with open(fleet_path, "r") as f:
         fleet = json.load(f)

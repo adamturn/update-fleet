@@ -2,7 +2,7 @@
 Update metadata files across a fleet of servers using Python and the secure copy protocol.
 
 ## Quickstart
-Clone this repo and enter the project's root directory.
+Clone this repo and enter the project root.
 ```shell
 $ cd ~/github
 $ git clone https://github.com/adamturn/update-fleet.git && cd update-fleet
@@ -59,7 +59,7 @@ Project structure should now resemble this:
     README.md
 ```
 
-Finally, scp a file across a fleet of servers by running the main.py module. The fleet option requires your \<fleet-name\> and the scp option requires a full remote path with the file name part matching one in your /scp-files directory.
+Finally, scp a file across a fleet of servers by running the "main.py" module with Python 3.6+. The fleet option requires your \<fleet-name\> and the scp option requires a full remote path with the file part matching one in your scp-files/ directory.
 ```shell
 $ python src/main.py fleet=fleet scp=~/utils/config-dev.properties
 ```
