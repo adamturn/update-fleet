@@ -44,7 +44,7 @@ pass=password
 Project structure should now resemble this:
 ```
 /update-fleet
-    /fleets
+    /fleet
         /.ssh
             fleet.pem
         fleet.json
