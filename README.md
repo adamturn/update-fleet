@@ -11,6 +11,9 @@ $ ssh -i ~/.ssh/aws/aws-private-key.pem cloud-user@54.0.0.1
 ```
 
 ## Quickstart
+### Dockerfile
+Doesn't work at the moment.
+### Local host
 Clone this repo and enter the project root.
 ```shell
 $ cd ~/github
